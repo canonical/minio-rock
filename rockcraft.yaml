@@ -7,9 +7,6 @@ version: 21.09.03
 license: Apache-2.0
 base: ubuntu@22.04
 run-user: _daemon_
-environment: 
-  RELEASE: "RELEASE.2021-09-03T03-56-13Z"
-  TARGETARCH: "linux-amd64"
 platforms:
   amd64:
 
@@ -18,7 +15,6 @@ services:
     override: replace
     summary: "minio service"
     startup: enabled
-    user: appuser
     command: "docker-entrypoint.sh [ minio ]"
 
 parts:
