@@ -16,7 +16,6 @@ services:
     summary: "minio service"
     startup: enabled
     command: "docker-entrypoint.sh minio [ ]"
-    user: ubuntu
     environment:
       MINIO_UPDATE_MINISIGN_PUBKEY: "RWTx5Zr1tiHQLwG9keckT0c45M3AGeHD6IvimQHpyRywVWGbP1aVSGav"     
 entrypoint-service: minio    
@@ -74,15 +73,7 @@ parts:
 
       $CRAFT_PART_INSTALL/usr/bin/verify-minio.sh
 
-  non-root-user:
-    plugin: nil
-    after: [ minio ]
-    overlay-script: |
-      # Create a user in the $CRAFT_OVERLAY chroot
-      groupadd -R $CRAFT_OVERLAY -g 1001 ubuntu
-      useradd -R $CRAFT_OVERLAY -M -r -u 1001 -g ubuntu ubuntu
-    override-prime: |
-      craftctl default
-      chown 584792:584792 ${CRAFT_PART_INSTALL}/data
-      chmod 755 ${CRAFT_PART_INSTALL}/data
-      
+      # Create default dir for minio backend
+      mkdir /data
+      chown 584792:584792 $CRAFT_PART_INSTALL/data
+      chmod 755 $CRAFT_PART_INSTALL/data
