@@ -54,7 +54,7 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/licenses
       mkdir -p $CRAFT_PART_INSTALL/licenses
 
-      cp -fr dockerscripts/* $CRAFT_PART_INSTALL/usr/bin/
+      cp -fr dockerscripts/* $CRAFT_PART_INSTALL/bin/
       cp CREDITS $CRAFT_PART_INSTALL/licenses/CREDITS
       cp LICENSE $CRAFT_PART_INSTALL/licenses/LICENSE
 
