@@ -12,7 +12,7 @@ platforms:
 
 services:
   minio:
-    override: replace
+    override: merge
     summary: "minio service"
     startup: enabled
     command: "docker-entrypoint.sh minio [ ]"
