@@ -10,6 +10,7 @@ run-user: _daemon_
 platforms:
   amd64:
 
+entrypoint-service: minio    
 services:
   minio:
     override: replace
