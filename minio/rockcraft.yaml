@@ -50,28 +50,28 @@ parts:
     override-build: |
       set -xe
 
-      mkdir -p $CRAFT_PART_INSTALL/bin
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
       mkdir -p $CRAFT_PART_INSTALL/licenses
       mkdir -p $CRAFT_PART_INSTALL/licenses
 
-      cp -fr dockerscripts/* $CRAFT_PART_INSTALL/bin/
+      cp -fr dockerscripts/* $CRAFT_PART_INSTALL/usr/bin/
       cp CREDITS $CRAFT_PART_INSTALL/licenses/CREDITS
       cp LICENSE $CRAFT_PART_INSTALL/licenses/LICENSE
 
-      wget -q -O $CRAFT_PART_INSTALL/bin/minio https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}
-      wget -q -O $CRAFT_PART_INSTALL/bin/minio.sha256sum https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}.sha256sum
-      wget -q -O $CRAFT_PART_INSTALL/bin/minio.minisig https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}.minisig
+      wget -q -O $CRAFT_PART_INSTALL/usr/bin/minio https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}
+      wget -q -O $CRAFT_PART_INSTALL/usr/bin/minio.sha256sum https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}.sha256sum
+      wget -q -O $CRAFT_PART_INSTALL/usr/bin/minio.minisig https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}.minisig
       
-      chmod +x $CRAFT_PART_INSTALL/bin/minio
-      chmod +x $CRAFT_PART_INSTALL/bin/docker-entrypoint.sh
-      chmod +x $CRAFT_PART_INSTALL/bin/verify-minio.sh
+      chmod +x $CRAFT_PART_INSTALL/usr/bin/minio
+      chmod +x $CRAFT_PART_INSTALL/usr/bin/docker-entrypoint.sh
+      chmod +x $CRAFT_PART_INSTALL/usr/bin/verify-minio.sh
       
       curl -O http://ftp.de.debian.org/debian/pool/main/m/minisign/minisign_0.11-1_amd64.deb
       apt-get install -y ./minisign_0.11-1_amd64.deb
 
-      sed -i 's|/usr/bin|$CRAFT_PART_INSTALL/bin|g' $CRAFT_PART_INSTALL/bin/verify-minio.sh
+      sed -i 's|/usr/bin|$CRAFT_PART_INSTALL/usr/bin|g' $CRAFT_PART_INSTALL/usr/bin/verify-minio.sh
 
-      $CRAFT_PART_INSTALL/bin/verify-minio.sh
+      $CRAFT_PART_INSTALL/usr/bin/verify-minio.sh
 
       # Create default dir for minio backend
       mkdir $CRAFT_PART_INSTALL/data
