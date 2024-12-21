@@ -83,5 +83,6 @@ parts:
       useradd -R $CRAFT_OVERLAY -M -r -u 1001 -g ubuntu ubuntu
     override-prime: |
       craftctl default
-      chown -R ubuntu:users data
+      chown 584792:584792 ${CRAFT_PART_INSTALL}/data
+      chmod 755 ${CRAFT_PART_INSTALL}/data
       
