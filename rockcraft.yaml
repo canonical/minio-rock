@@ -14,7 +14,7 @@ services:
   minio:
     override: replace
     summary: "minio service"
-    startup: enabled
+    startup: disabled
     command: "docker-entrypoint.sh minio [ ]"
     environment:
       MINIO_UPDATE_MINISIGN_PUBKEY: "RWTx5Zr1tiHQLwG9keckT0c45M3AGeHD6IvimQHpyRywVWGbP1aVSGav"     
