@@ -76,5 +76,5 @@ parts:
 
       # Create default dir for minio backend
       mkdir $CRAFT_PART_INSTALL/data
-      chown 584792:584792 $CRAFT_PART_INSTALL/data
+      chown 584792:users $CRAFT_PART_INSTALL/data
       chmod 755 $CRAFT_PART_INSTALL/data
