@@ -25,12 +25,50 @@ def test_rock():
             "exec",
             "ls",
             "-la",
-            "/third_party/mariadb-connector-c",
+            "/usr/bin/minio"
         ],
         check=True,
     )
 
     subprocess.run(
-        ["docker", "run", "--rm", LOCAL_ROCK_IMAGE, "exec", "ls", "-la", "/bin/minio"],
+        [
+            "docker",
+            "run",
+            "--rm",
+            LOCAL_ROCK_IMAGE,
+            "exec",
+            "ls",
+            "-la",
+            "/usr/bin/docker-entrypoint.sh"
+        ],
         check=True,
     )
+
+    subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            LOCAL_ROCK_IMAGE,
+            "exec",
+            "ls",
+            "-la",
+            "/licenses/CREDITS"
+        ],
+        check=True,
+    )
+
+    subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            LOCAL_ROCK_IMAGE,
+            "exec",
+            "ls",
+            "-la",
+            "/licenses/LICENSE"
+        ],
+        check=True,
+    )
+    
