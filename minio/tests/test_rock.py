@@ -21,11 +21,11 @@ def test_rock():
             "docker",
             "run",
             "--rm",
+            "--entrypoint",
+            "/bin/bash",
             LOCAL_ROCK_IMAGE,
-            "exec",
-            "ls",
-            "-la",
-            "/usr/bin/minio"
+            "-c",
+            "ls -la /usr/bin/minio"
         ],
         check=True,
     )
@@ -35,11 +35,25 @@ def test_rock():
             "docker",
             "run",
             "--rm",
+            "--entrypoint",
+            "/bin/bash",
             LOCAL_ROCK_IMAGE,
-            "exec",
-            "ls",
-            "-la",
-            "/usr/bin/docker-entrypoint.sh"
+            "-c",
+            "ls -la /usr/bin/docker-entrypoint.sh"
+        ],
+        check=True,
+    )
+    
+    subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "--entrypoint",
+            "/bin/bash",
+            LOCAL_ROCK_IMAGE,
+            "-c",
+            "ls -la /licenses/CREDITS"
         ],
         check=True,
     )
@@ -49,25 +63,11 @@ def test_rock():
             "docker",
             "run",
             "--rm",
+            "--entrypoint",
+            "/bin/bash",
             LOCAL_ROCK_IMAGE,
-            "exec",
-            "ls",
-            "-la",
-            "/licenses/CREDITS"
-        ],
-        check=True,
-    )
-
-    subprocess.run(
-        [
-            "docker",
-            "run",
-            "--rm",
-            LOCAL_ROCK_IMAGE,
-            "exec",
-            "ls",
-            "-la",
-            "/licenses/LICENSE"
+            "-c",
+            "ls -la /licenses/LICENSE"
         ],
         check=True,
     )
