@@ -1,0 +1,80 @@
+# Based on: https://github.com/minio/minio/blob/RELEASE.2021-09-03T03-56-13Z/Dockerfile.release
+name: minio
+summary: MinIO is a High Performance Object Storage, API compatible with Amazon S3 cloud storage service.
+description: |
+  MinIO object storage is fundamentally different. Designed for performance and the S3 API, it is 100% open-source. MinIO is ideal for large, private cloud environments with stringent security requirements and delivers mission-critical availability across a diverse range of workloads.
+version: ckf-1.9
+license: Apache-2.0
+base: ubuntu@22.04
+run-user: _daemon_
+platforms:
+  amd64:
+
+services:
+  minio:
+    override: replace
+    summary: "minio service"
+    startup: enabled
+    command: "docker-entrypoint.sh minio [ ]"
+    environment:
+      MINIO_UPDATE_MINISIGN_PUBKEY: "RWTx5Zr1tiHQLwG9keckT0c45M3AGeHD6IvimQHpyRywVWGbP1aVSGav"     
+entrypoint-service: minio
+
+
+parts:
+  security-team-requirement:
+    plugin: nil
+    override-build: |
+      mkdir -p ${CRAFT_PART_INSTALL}/usr/share/rocks
+      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && \
+       dpkg-query -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > \
+       ${CRAFT_PART_INSTALL}/usr/share/rocks/dpkg.query
+
+  minio:
+    plugin: nil
+    source-type: git    
+    source: https://github.com/minio/minio
+    source-depth: 1
+    source-tag: RELEASE.2021-09-03T03-56-13Z
+    build-environment:
+      - RELEASE: RELEASE.2021-09-03T03-56-13Z
+      - TARGETARCH: amd64
+    build-packages:
+      - wget
+      - ca-certificates
+      - passwd
+      - util-linux
+      - iproute2
+      - iputils-ping
+      - bash
+      - rpm
+    override-build: |
+      set -xe
+
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+      mkdir -p $CRAFT_PART_INSTALL/licenses
+      mkdir -p $CRAFT_PART_INSTALL/licenses
+
+      cp -fr dockerscripts/* $CRAFT_PART_INSTALL/usr/bin/
+      cp CREDITS $CRAFT_PART_INSTALL/licenses/CREDITS
+      cp LICENSE $CRAFT_PART_INSTALL/licenses/LICENSE
+
+      wget -q -O $CRAFT_PART_INSTALL/usr/bin/minio https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}
+      wget -q -O $CRAFT_PART_INSTALL/usr/bin/minio.sha256sum https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}.sha256sum
+      wget -q -O $CRAFT_PART_INSTALL/usr/bin/minio.minisig https://dl.min.io/server/minio/release/linux-${TARGETARCH}/archive/minio.${RELEASE}.minisig
+      
+      chmod +x $CRAFT_PART_INSTALL/usr/bin/minio
+      chmod +x $CRAFT_PART_INSTALL/usr/bin/docker-entrypoint.sh
+      chmod +x $CRAFT_PART_INSTALL/usr/bin/verify-minio.sh
+      
+      curl -O http://ftp.de.debian.org/debian/pool/main/m/minisign/minisign_0.11-1_amd64.deb
+      apt-get install -y ./minisign_0.11-1_amd64.deb
+
+      sed -i 's|/usr/bin|$CRAFT_PART_INSTALL/usr/bin|g' $CRAFT_PART_INSTALL/usr/bin/verify-minio.sh
+
+      $CRAFT_PART_INSTALL/usr/bin/verify-minio.sh
+
+      # Create default dir for minio backend
+      mkdir $CRAFT_PART_INSTALL/data
+      chown 584792:users $CRAFT_PART_INSTALL/data
+      chmod 755 $CRAFT_PART_INSTALL/data
