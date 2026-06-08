@@ -40,13 +40,17 @@ parts:
       - TARGETARCH: amd64
     build-packages:
       - wget
-      - ca-certificates
       - passwd
       - util-linux
       - iproute2
       - iputils-ping
       - bash
       - rpm
+    overlay-packages:
+      # NOTE: "ca-certificates" installed among "overlay-packages" instead of
+      # "stage-packages" as a workaround to this issue:
+      # https://github.com/canonical/rockcraft/issues/334
+      - ca-certificates
     override-build: |
       set -xe
 
